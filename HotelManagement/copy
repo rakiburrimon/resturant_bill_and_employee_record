@@ -1,0 +1,111 @@
+ <div class="col-sm-12">
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-warning" data-target="#member-details" data-toggle="modal">Add/Remove Family Member</button>
+                    <input type="hidden" name="memberList">
+                    <div id="family-list" class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr><th>First Name</th><th>Last Name</th><th>Relation</th><th>Birth Date</th></tr>
+                            </thead>
+                            <tbody id="family-list-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+<div class="modal fade" id="member-details" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Family Member Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group text-center">
+                    <button id="add" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                    <label>Member</label>
+                    <button id="remove" type="button" class="btn btn-danger btn-sm"><i class="fa fa-minus"></i></button>
+                    <br>
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="label-default" style="width: 25%" >First Name</label>
+                            <label class="label-info" style="width: 25%" >Last Name</label>
+                            <label class="label-primary" style="width: 20%" >Relationship</label>
+                            <label class="label-warning" style="width: 20%" >Birth Date</label>
+                        </div>
+                    </div>
+                    <div id="family-div"></div>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" id="relsave" class="btn btn-info">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="hide">
+    <div class="ing">
+        <div class="form-group">
+            <div class="form-inline">
+                <input class="form-control rfname" required style="width: 25%" placeholder="First Name">
+                <input class="form-control rlname" style="width: 25%" placeholder="Last Name">
+                <select class="form-control rrel" style="width: 20%" title="Relationship With">
+                                                <option value="1">Husband</option>
+                                                        <option value="2">Wife</option>
+                                                        <option value="3">Father</option>
+                                                        <option value="4">Mother</option>
+                                                        <option value="5">Son</option>
+                                                        <option value="6">Daughter</option>
+                                                        <option value="7">Brother</option>
+                                                        <option value="8">Sister</option>
+                                                        <option value="9">Alias</option>
+                                                        <option value="10">Other</option>
+                                            </select>
+                <input class="form-control rdob date" style="width: 20%" placeholder="Birth Date">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        var con = 1;
+        $('#add').click(function () {
+            $('#family-div').prepend("<div id='divfam" + con + "'><div class='text-center'>" + $(".ing").html() + "</div></div>");
+            con++;
+        });
+        $('#remove').click(function () {
+            if (con > 1) {
+                $("#divfam" + con).remove();
+                con--;
+            } else if (con === 1) {
+                $("#divfam" + con).remove();
+            }
+        });
+        $('#relsave').click(function () {
+            var n = 0;
+            var iarray = [];
+            $("#family-list-table").html("");
+            $("#family-div").children("div").each(function () {
+                var parnt = $(this).attr("id");
+                var fname = $("#" + parnt).find(".rfname").val();
+                var lname = $("#" + parnt).find(".rlname").val();
+                var rel = $("#" + parnt).find(".rrel").val();
+                var dob = $("#" + parnt).find(".rdob").val();
+                var data = {"fname": fname, "lname": lname, "rel": rel, "dob": dob};
+                iarray.push(data);
+                $("#family-list-table").append("<tr><td>" + fname + "</td><td>" + lname + "</td><td>" + $("#" + parnt).find(".rrel option:selected").text() + "</td><td>" + dob + "</td><tr>");
+                n++;
+            });
+            var io = JSON.stringify(iarray);
+            $("input[name=memberList]").val(io);
+            $("#member-details").modal("toggle");
+        });
+    });
+</script>
